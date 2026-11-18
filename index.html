@@ -4,177 +4,452 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<title>Hot Jobs Staff</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Hot Jobs">
+<title>Hot Jobs</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Kalam:wght@400;700&display=swap">
 <style>
+/* Layout: a planner week spread. Six day columns + TO DO side by side on ruled paper; scrolls sideways on a phone. */
 :root {
-  --bg: #F6F5F1; --surface: #FFFFFF; --fg: #1B1B1F; --muted: #6E6D75; --line: #E1DFD8; --soft: #EFEDE7;
-  --accent: #E25A0C; --accent-fg: #FFFFFF;
-  --late: #B6382C; --today: #E25A0C; --tomorrow: #B98300; --ok: #3A7A4B; --chip: #ECEAE3;
-  --font-display: "Barlow Condensed", "Arial Narrow", "DIN Condensed", sans-serif;
-  --font-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --paper: #FBFAF6; --desk: #EFEDE7; --rule: #E4E1D8; --frame: #C9C5BA;
+  --ink: #1D1D1F; --muted: #77746C; --red: #C3262C; --today: #FFF3D6;
+  --dot-shell: #B9B5AA; --dot-proof: #D99A00; --dot-ok: #2F8A4C;
+  --print: "Jost", "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+  --hand: "Kalam", "Bradley Hand", "Marker Felt", cursive;
+  --row: 28px;
 }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
-  --bg: #141416; --surface: #1E1E22; --fg: #F1F0EC; --muted: #A09FA8; --line: #2F2F36; --soft: #26262C;
-  --accent: #FF7A33; --accent-fg: #1B1B1F; --late: #FF6B5C; --today: #FF7A33; --tomorrow: #E6B23A; --ok: #6FC287; --chip: #2B2B31;
+@media (prefers-color-scheme: dark) { :root {
+  --paper: #1C1C1E; --desk: #121213; --rule: #2C2C30; --frame: #3A3A3F;
+  --ink: #EDEBE6; --muted: #9C9A94; --red: #FF6B60; --today: #2E2716;
+  --dot-shell: #6E6C66; --dot-proof: #E6B23A; --dot-ok: #5FC27F;
   color-scheme: dark; } }
-:root[data-theme="dark"] {
-  --bg: #141416; --surface: #1E1E22; --fg: #F1F0EC; --muted: #A09FA8; --line: #2F2F36; --soft: #26262C;
-  --accent: #FF7A33; --accent-fg: #1B1B1F; --late: #FF6B5C; --today: #FF7A33; --tomorrow: #E6B23A; --ok: #6FC287; --chip: #2B2B31;
-  color-scheme: dark; }
 * { box-sizing: border-box; }
-html, body { margin: 0; }
-body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.4; }
-.wrap { max-width: 760px; margin: 0 auto; padding-block: 12px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 8px 0 14px; border-bottom: 2px solid var(--fg); }
-h1 { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1; margin: 0; letter-spacing: .01em; text-transform: uppercase; }
-h1 span { color: var(--accent); }
-.fresh { color: var(--muted); font-size: 13px; }
-.fresh.stale { color: var(--tomorrow); }
-button { font: inherit; cursor: pointer; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: 7px 12px; font-weight: 500; }
-button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); font-weight: 600; }
-button.quiet { border-color: transparent; background: transparent; color: var(--muted); }
-.group { margin-top: 22px; }
-.group h2 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter-spacing: .04em; text-transform: uppercase; margin: 0 0 8px; display: flex; align-items: baseline; gap: 10px; }
-.group h2 .n { font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0; text-transform: none; }
-.group.late h2 { color: var(--late); } .group.today h2 { color: var(--today); } .group.tomorrow h2 { color: var(--tomorrow); }
-.job { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
-.due { font-family: var(--font-display); line-height: 1; padding-top: 2px; }
-.due .day { font-size: 13px; font-weight: 600; letter-spacing: .06em; color: var(--muted); }
-.due .date { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.due .rel { font-family: var(--font-body); font-size: 12px; color: var(--muted); margin-top: 2px; }
-.late .due .date { color: var(--late); } .today .due .date { color: var(--today); } .tomorrow .due .date { color: var(--tomorrow); }
-.who { min-width: 0; }
-.cust { font-weight: 600; font-size: 17px; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-.chip { font-size: 12px; background: var(--chip); color: var(--fg); border-radius: 999px; padding: 2px 9px; }
-.chip.why { background: transparent; border: 1px dashed var(--line); color: var(--muted); }
-.chip.big { background: var(--accent); color: var(--accent-fg); font-weight: 600; }
-.note { margin-top: 6px; font-size: 14px; color: var(--muted); }
-.status { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; border-radius: 999px; padding: 5px 10px; border: 1px solid var(--line); background: var(--soft); white-space: nowrap; }
-.status.proof { border-color: var(--tomorrow); color: var(--tomorrow); }
-.status.approved, .status.production { border-color: var(--ok); color: var(--ok); }
-.empty { color: var(--muted); padding: 28px 0; text-align: center; }
-.gate { max-width: 360px; margin: 60px auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 10px; }
-.gate h1 { font-size: 32px; }
-.gate p { margin: 0; color: var(--muted); font-size: 14px; }
-.gate input { font: inherit; font-size: 22px; letter-spacing: .2em; text-align: center; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); }
-.gate .err { color: var(--late); font-size: 14px; min-height: 1.2em; }
-.foot { margin-top: 28px; color: var(--muted); font-size: 13px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-.foot a { color: var(--accent); }
-@media (max-width: 520px) {
-  h1 { font-size: 32px; }
-  .job { grid-template-columns: 70px minmax(0, 1fr); }
-  .act { grid-column: 1 / -1; display: flex; justify-content: flex-end; }
-  .due .date { font-size: 22px; }
+html, body { margin: 0; height: 100%; }
+body { background: var(--desk); color: var(--ink); font-family: var(--print); font-size: 15px; -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* gate */
+.gate { max-width: 340px; margin: 12vh auto 0; background: var(--paper); border: 1px solid var(--frame); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.gate h1 { font-weight: 300; font-size: 30px; letter-spacing: .02em; margin: 0; }
+.gate h1 b { font-weight: 600; color: var(--red); }
+.gate p { margin: 0; color: var(--muted); }
+.gate input { font: inherit; font-size: 22px; letter-spacing: .15em; text-align: center; padding: 10px; border: 1px solid var(--frame); border-radius: 8px; background: var(--desk); color: var(--ink); }
+.gate .go { background: var(--ink); color: var(--paper); border: 0; border-radius: 8px; padding: 11px; font-weight: 500; }
+.gate .err { color: var(--red); min-height: 1.2em; font-size: 14px; }
+
+/* book */
+.book { max-width: 1500px; margin: 0 auto; padding: 10px max(12px, env(safe-area-inset-left, 0px)) 24px max(12px, env(safe-area-inset-right, 0px)); }
+.top { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 6px 4px 10px; }
+.month { font-weight: 300; font-size: clamp(22px, 4.2vw, 34px); letter-spacing: .06em; text-transform: uppercase; line-height: 1; }
+.right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.weekno { font-weight: 300; font-size: clamp(20px, 3.4vw, 28px); margin-right: 6px; }
+.nav { border: 1px solid var(--frame); background: var(--paper); border-radius: 999px; min-width: 38px; height: 34px; padding: 0 12px; }
+.sync { font-size: 12px; color: var(--muted); min-width: 64px; text-align: right; }
+.sync.bad { color: var(--red); }
+.page { background: var(--paper); border: 1px solid var(--frame); border-radius: 6px; box-shadow: 0 1px 0 var(--frame), 0 8px 24px rgba(0,0,0,.06); overflow: hidden; }
+.week { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(168px, 1fr); overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+.day { scroll-snap-align: start; border-right: 1px solid var(--rule); display: flex; flex-direction: column; min-height: calc(var(--row) * 18); }
+.day:last-child { border-right: 0; }
+.day.todo { background: color-mix(in srgb, var(--desk) 45%, var(--paper)); }
+.dh { height: calc(var(--row) * 2); padding: 8px 10px 0; border-bottom: 2px solid var(--frame); display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.dh .dn { font-weight: 300; font-size: 15px; color: var(--muted); }
+.dh .dd { font-weight: 400; font-size: 24px; }
+.day.is-today .dh { background: var(--today); }
+.day.is-today .dh .dn { color: var(--ink); font-weight: 500; }
+.lines { flex: 1; background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--row) - 1px), var(--rule) calc(var(--row) - 1px), var(--rule) var(--row)); padding: 0 8px; }
+.sub { height: var(--row); line-height: var(--row); font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+
+.e { position: relative; display: block; width: 100%; text-align: left; background: none; border: 0; padding: 0 22px 0 14px; }
+.e .n { display: block; height: var(--row); line-height: var(--row); font-family: var(--hand); font-weight: 700; font-size: 17px; color: var(--red); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.e .w { display: flex; justify-content: space-between; gap: 6px; height: var(--row); line-height: var(--row); font-family: var(--hand); font-size: 15px; color: var(--ink); }
+.e .w .j { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.e .w .m { white-space: nowrap; flex: none; }
+.e .dot { position: absolute; left: 2px; top: 11px; width: 7px; height: 7px; border-radius: 50%; background: var(--dot-shell); }
+.e .dot.proof { background: var(--dot-proof); }
+.e .dot.approved, .e .dot.production { background: var(--dot-ok); }
+.e .late { color: var(--red); font-family: var(--print); font-size: 11px; font-weight: 600; letter-spacing: .04em; }
+.e.done .n, .e.done .w { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 3px; text-decoration-color: var(--ink); }
+.e.done .dot { background: transparent; border: 1px solid var(--muted); }
+.e .x { position: absolute; right: 0; top: 2px; width: 22px; height: 24px; border: 0; background: none; color: var(--muted); font-size: 18px; line-height: 1; padding: 0; }
+.e:hover .n { text-decoration-color: var(--ink); }
+.add { display: block; height: var(--row); line-height: var(--row); border: 0; background: none; color: var(--muted); padding: 0 0 0 14px; font-size: 13px; }
+.add:hover { color: var(--ink); }
+form.w-in { display: grid; gap: 0; }
+form.w-in input { font-family: var(--hand); font-size: 16px; height: var(--row); border: 0; border-bottom: 1px dashed var(--frame); background: transparent; color: var(--ink); padding: 0 4px 0 14px; width: 100%; }
+form.w-in input:first-child { color: var(--red); font-weight: 700; }
+form.w-in .row { display: flex; gap: 6px; justify-content: flex-end; height: var(--row); align-items: center; }
+form.w-in .row button { font-size: 12px; border: 1px solid var(--frame); background: var(--paper); border-radius: 6px; padding: 2px 8px; }
+.empty { height: var(--row); line-height: var(--row); padding-left: 14px; color: var(--muted); font-size: 12px; font-style: italic; }
+
+.foot { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; color: var(--muted); font-size: 12px; padding: 10px 4px 0; }
+.legend { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.foot button { border: 0; background: none; color: var(--muted); text-decoration: underline; padding: 0; font-size: 12px; }
+.banner { margin: 0 4px 10px; padding: 8px 12px; border: 1px solid var(--frame); background: var(--paper); border-radius: 6px; font-size: 13px; color: var(--muted); }
+.toast { position: fixed; left: 50%; bottom: max(16px, env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--paper); border-radius: 999px; padding: 9px 10px 9px 16px; display: flex; gap: 12px; align-items: center; font-size: 14px; box-shadow: 0 6px 20px rgba(0,0,0,.25); max-width: calc(100vw - 24px); }
+.toast button { background: var(--paper); color: var(--ink); border: 0; border-radius: 999px; padding: 4px 12px; font-weight: 600; }
+@media (max-width: 760px) {
+  .week { grid-auto-columns: calc((100vw - 26px) / 2.1); }
 }
+@media (prefers-reduced-motion: no-preference) { .week { scroll-behavior: smooth; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <form class="gate" id="gate" autocomplete="off">
-    <h1>Hot <span>Jobs</span></h1>
-    <p>Staff only. Enter the code to see the list.</p>
-    <input id="code" type="password" inputmode="numeric" placeholder="code" aria-label="code" required>
-    <div class="err" id="err"></div>
-    <button class="primary" type="submit">Open</button>
-  </form>
+<form class="gate" id="gate" autocomplete="off">
+  <h1>HOT <b>JOBS</b></h1>
+  <p>Enter the code to open the book.</p>
+  <input id="code" type="password" placeholder="code" aria-label="code" required>
+  <div class="err" id="err"></div>
+  <button class="go" type="submit">Open</button>
+</form>
 
-  <div id="app" hidden>
-    <header>
-      <div><h1>Hot <span>Jobs</span></h1><div class="fresh" id="fresh"></div></div>
-      <div><button id="lock" class="quiet">Lock</button></div>
-    </header>
-    <div id="list"></div>
-    <div class="foot">
-      <span>Finished one, ordered blanks, or want a note on it? Tell Claude and it updates on the next refresh.</span>
+<div class="book" id="book" hidden>
+  <div class="top">
+    <div class="month" id="month"></div>
+    <div class="right">
+      <span class="weekno" id="weekno"></span>
+      <button class="nav" id="prev" aria-label="Previous week">‹</button>
+      <button class="nav" id="thisweek">This week</button>
+      <button class="nav" id="next" aria-label="Next week">›</button>
+      <span class="sync" id="sync"></span>
     </div>
   </div>
+  <div class="banner" id="banner" hidden></div>
+  <div class="page"><div class="week" id="week"></div></div>
+  <div class="foot">
+    <div class="legend">
+      <span><i style="background:var(--dot-shell)"></i>shell</span>
+      <span><i style="background:var(--dot-proof)"></i>proof out</span>
+      <span><i style="background:var(--dot-ok)"></i>approved</span>
+      <span>Tap a job to strike it off. Tap again to bring it back.</span>
+    </div>
+    <div><span id="fresh"></span> · <button id="lock">Lock</button></div>
+  </div>
 </div>
+<div class="toast" id="toast" hidden><span id="toastMsg"></span><button id="undo">Undo</button></div>
 
 <script>
 (function () {
+  "use strict";
   const $ = (s) => document.querySelector(s);
-  const ORDER = ["shell", "proof", "approved", "production", "done"];
-  const LABEL = { shell: "Shell", proof: "Proof out", approved: "Approved", production: "In production", done: "Done" };
-  const GROUPS = [["late", "Past due"], ["today", "Today"], ["tomorrow", "Tomorrow"], ["week", "This week"], ["next", "Next week"], ["later", "Big ones coming"]];
-  const DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const dayDiff = (iso) => { if (!iso) return null; const [y, m, d] = iso.split("-").map(Number); const a = new Date(y, m - 1, d), b = new Date(); b.setHours(0, 0, 0, 0); return Math.round((a - b) / 86400000); };
-  const bucket = (j) => { const n = dayDiff(j.due); if (n === null) return "later"; if (n < 0) return "late"; if (n === 0) return "today"; if (n === 1) return "tomorrow"; if (n <= 7) return "week"; if (n <= 14) return "next"; return "later"; };
-  const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const DOW = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const MON = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const API = "https://api.github.com";
+  let code = "", feed = null, w = null;
+  let remote = { jobs: {}, manual: {} }, remoteSha = null, remoteSalt = null;
+  let pending = { jobs: {}, manual: {} };
+  let saving = false, weekStart = null, addingDay = null, lastUndo = null, toastTimer = null;
+  const keys = new Map();
 
-  async function decrypt(enc, code) {
-    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(code), "PBKDF2", false, ["deriveKey"]);
-    const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(enc.salt), iterations: enc.iter || 120000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
-    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(enc.iv) }, key, b64(enc.data));
+  // ---------- small helpers ----------
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const pad = (n) => String(n).padStart(2, "0");
+  const iso = (d) => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  const parse = (s) => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+  const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+  const mondayOf = (d) => { const x = new Date(d); const k = (x.getDay() + 6) % 7; x.setDate(x.getDate() - k); x.setHours(0, 0, 0, 0); return x; };
+  const isoWeek = (d) => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const n = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - n); const y0 = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return Math.ceil(((t - y0) / 86400000 + 1) / 7); };
+  const nowIso = () => new Date().toISOString();
+  const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const toB64 = (u8) => { let s = ""; for (let i = 0; i < u8.length; i++) s += String.fromCharCode(u8[i]); return btoa(s); };
+  const titleCase = (s) => String(s || "").toLowerCase().replace(/\b([a-z])/g, (m) => m.toUpperCase()).replace(/\b(Ls|Ss|Lc|Dtf|Dtg|Ft|Nyc|Sr|Jr|Ii|Iii|Vfd)\b/g, (m) => m.toUpperCase());
+
+  function method(dec, job) {
+    const d = (dec + " " + job).toUpperCase();
+    if (/EMB|PATCH|HAT/.test(d) && /EMB|PATCH/.test(d)) return "EMB";
+    if (/DTF/.test(d)) return "DTF";
+    if (/DTG/.test(d)) return "DTG";
+    if (/SCREEN/.test(d)) return "SP";
+    if (/VINYL/.test(d)) return "Vinyl";
+    if (/BANNER/.test(d)) return "Banner";
+    if (/STICKER/.test(d)) return "Stickers";
+    if (/LASER|ENGRAV/.test(d)) return "Laser";
+    if (/SUBLIM/.test(d)) return "Sub";
+    if (/TRANSFER/.test(d)) return "Transfer";
+    return "";
+  }
+
+  // ---------- crypto (same scheme as the shop Mac: PBKDF2-SHA256 120k -> AES-GCM) ----------
+  async function keyFor(saltB64, iter) {
+    const k = saltB64 + ":" + iter;
+    if (!keys.has(k)) {
+      keys.set(k, (async () => {
+        const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(code), "PBKDF2", false, ["deriveKey"]);
+        return crypto.subtle.deriveKey({ name: "PBKDF2", salt: b64(saltB64), iterations: iter || 120000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+      })());
+    }
+    return keys.get(k);
+  }
+  async function decrypt(env) {
+    const key = await keyFor(env.salt, env.iter);
+    const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: b64(env.iv) }, key, b64(env.data));
     return JSON.parse(new TextDecoder().decode(plain));
   }
+  async function encrypt(obj, saltB64) {
+    const salt = saltB64 || toB64(crypto.getRandomValues(new Uint8Array(16)));
+    const key = await keyFor(salt, 120000);
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(JSON.stringify(obj))));
+    return { v: 1, salt, iv: toB64(iv), iter: 120000, data: toB64(ct), published_at: nowIso() };
+  }
 
-  function effStatus(j, mark) {
-    if (mark && mark.done) return "done";
-    let s = ORDER.includes(j.status_auto) ? j.status_auto : "shell";
-    if (mark && ORDER.includes(mark.status_manual) && ORDER.indexOf(mark.status_manual) > ORDER.indexOf(s)) s = mark.status_manual;
+  // ---------- the shared check-offs (a small file on the "marks" branch) ----------
+  function mergeBoards(...boards) {
+    const out = { jobs: {}, manual: {} };
+    for (const b of boards) for (const part of ["jobs", "manual"]) for (const [k, v] of Object.entries((b && b[part]) || {})) {
+      if (!v || typeof v !== "object") continue;
+      const cur = out[part][k];
+      if (!cur || String(v.at || "") > String(cur.at || "")) out[part][k] = v;
+    }
+    return out;
+  }
+  function ghHeaders() { return { Authorization: "Bearer " + w.token, Accept: "application/vnd.github+json" }; }
+  function marksUrl(withRef) { return API + "/repos/" + w.owner + "/" + w.repo + "/contents/" + w.path + (withRef ? "?ref=" + encodeURIComponent(w.branch) : ""); }
+  async function fetchBoard() {
+    const r = await fetch(marksUrl(true) + "&t=" + Date.now(), { headers: ghHeaders(), cache: "no-store" });
+    if (r.status === 404) return { board: { jobs: {}, manual: {} }, sha: null, salt: null };
+    if (!r.ok) throw new Error("read " + r.status);
+    const j = await r.json();
+    const env = JSON.parse(atob(String(j.content || "").replace(/\s/g, "")));
+    return { board: await decrypt(env), sha: j.sha, salt: env.salt };
+  }
+  function hasPending() { return Object.keys(pending.jobs).length + Object.keys(pending.manual).length > 0; }
+  async function flush() {
+    if (saving || !w || !hasPending()) return;
+    saving = true; setSync("Saving…");
+    const sending = pending; pending = { jobs: {}, manual: {} };
+    let ok = false;
+    for (let attempt = 0; attempt < 4 && !ok; attempt++) {
+      try {
+        const cur = await fetchBoard();
+        const merged = mergeBoards(cur.board, sending);
+        const env = await encrypt(merged, cur.salt || remoteSalt);
+        const body = { message: "check-off " + new Date().toLocaleString(), branch: w.branch, content: btoa(JSON.stringify(env)) };
+        if (cur.sha) body.sha = cur.sha;
+        const r = await fetch(marksUrl(false), { method: "PUT", headers: Object.assign({ "Content-Type": "application/json" }, ghHeaders()), body: JSON.stringify(body) });
+        if (r.ok) { const res = await r.json(); remote = merged; remoteSha = res.content && res.content.sha; remoteSalt = env.salt; ok = true; break; }
+        if (r.status === 409 || r.status === 422) continue; // someone else saved a moment ago: re-read and try again
+        throw new Error("save " + r.status);
+      } catch (e) {
+        if (attempt === 3) break;
+        await new Promise((res) => setTimeout(res, 600 * (attempt + 1)));
+      }
+    }
+    if (!ok) { pending = mergeBoards(sending, pending); setSync("Not saved", true); setTimeout(flush, 15000); }
+    else setSync("Saved");
+    saving = false;
+    render();
+    if (hasPending()) flush();
+  }
+  async function poll() {
+    if (!w || saving || hasPending() || document.hidden) return;
+    try {
+      const cur = await fetchBoard();
+      if (cur.sha !== remoteSha) { remote = cur.board; remoteSha = cur.sha; remoteSalt = cur.salt; render(); }
+      setSync("Up to date");
+    } catch (e) { setSync("Offline", true); }
+  }
+  function setSync(t, bad) { const s = $("#sync"); s.textContent = t; s.classList.toggle("bad", !!bad); }
+
+  // ---------- what the book shows ----------
+  function view() { return mergeBoards({ jobs: feed.marks || {}, manual: feed.manual || {} }, remote, pending); }
+  function statusOf(j, m) {
+    const order = ["shell", "proof", "approved", "production", "done"];
+    let s = order.includes(j.status_auto) ? j.status_auto : "shell";
+    if (m && order.includes(m.status_manual) && order.indexOf(m.status_manual) > order.indexOf(s)) s = m.status_manual;
     return s;
   }
+  function entryHTML(kind, id, name, what, meth, isDone, dotClass, extra) {
+    return '<div class="e' + (isDone ? " done" : "") + '" role="button" tabindex="0" aria-pressed="' + isDone + '" data-kind="' + kind + '" data-id="' + esc(id) + '">' +
+      '<span class="dot ' + dotClass + '"></span>' +
+      '<span class="n">' + esc(name) + (extra || "") + '</span>' +
+      '<span class="w"><span class="j">' + esc(what) + '</span><span class="m">' + esc(meth) + "</span></span>" +
+      (kind === "manual" ? '<button class="x" data-del="' + esc(id) + '" aria-label="Erase this line">×</button>' : "") + "</div>";
+  }
+  function jobEntry(j, v, extraTag) {
+    const m = v.jobs[j.job_id];
+    const st = statusOf(j, m);
+    const pcs = j.pieces ? j.pieces + (j.pieces === 1 ? " pc" : " pcs") : "";
+    const meth = [pcs, method(j.decoration, j.job)].filter(Boolean).join(" ");
+    return entryHTML("job", j.job_id, j.customer, titleCase(j.job), meth, !!(m && m.done), st, extraTag);
+  }
+  function manualEntry(id, e) { return entryHTML("manual", id, e.who || "", e.what || "", "", !!e.done, "", ""); }
 
-  function render(feed) {
-    const list = $("#list"); list.innerHTML = "";
-    const marks = feed.marks || {};
-    const jobs = Object.values(feed.jobs || {}).filter((j) => !(marks[j.job_id] && marks[j.job_id].done));
-    if (!jobs.length) { list.innerHTML = '<div class="empty">Nothing hot right now.</div>'; return; }
-    for (const [key, title] of GROUPS) {
-      const rows = jobs.filter((j) => bucket(j) === key).sort((a, b) => (a.due || "9999") < (b.due || "9999") ? -1 : (a.due || "9999") > (b.due || "9999") ? 1 : (b.pieces || 0) - (a.pieces || 0));
-      if (!rows.length) continue;
-      const g = document.createElement("section"); g.className = "group " + key;
-      g.innerHTML = "<h2>" + title + ' <span class="n">' + rows.length + "</span></h2>";
-      for (const j of rows) {
-        const mark = marks[j.job_id] || {}, st = effStatus(j, mark);
-        let due = '<div class="day">NO DATE</div><div class="date">—</div>';
-        if (j.due) { const [y, m, d] = j.due.split("-").map(Number); const n = dayDiff(j.due);
-          const rel = n === 0 ? "today" : n === 1 ? "tomorrow" : n < 0 ? (-n) + (n === -1 ? " day late" : " days late") : "in " + n + " days";
-          due = '<div class="day">' + DOW[new Date(y, m - 1, d).getDay()] + '</div><div class="date">' + m + "/" + d + '</div><div class="rel">' + rel + "</div>"; }
-        else if (j.due_text) due = '<div class="day">NEED BY</div><div class="date" style="font-size:15px">' + esc(j.due_text) + "</div>";
-        const chips = [];
-        if (j.pieces) chips.push('<span class="chip' + ((j.reasons || []).some((r) => /pieces/.test(r)) ? " big" : "") + '">' + j.pieces + " pc</span>");
-        if (j.decoration) chips.push('<span class="chip">' + esc(j.decoration) + "</span>");
-        if (j.proof_version && j.proof_version !== "V1") chips.push('<span class="chip">' + esc(j.proof_version) + "</span>");
-        for (const r of (j.reasons || [])) if (!/^due |pieces$|past due/.test(r)) chips.push('<span class="chip why">' + esc(r) + "</span>");
-        if (st === "proof" && j.proof_sent_at) chips.push('<span class="chip why">proof out ' + esc(j.proof_sent_at.slice(5, 10).replace("-", "/")) + ", no answer</span>");
-        const el = document.createElement("article"); el.className = "job " + key;
-        el.innerHTML = '<div class="due">' + due + '</div><div class="who"><div class="cust">' + esc(j.customer) + '</div><div>' + esc(j.job) + '</div><div class="chips">' + chips.join("") + "</div>" +
-          (mark.note ? '<div class="note">' + esc(mark.note) + "</div>" : "") + '</div><div class="act"><span class="status ' + st + '">' + LABEL[st] + "</span></div>";
-        g.appendChild(el);
+  function render() {
+    if (!feed) return;
+    const v = view();
+    const t = today();
+    const days = [0, 1, 2, 3, 4, 5].map((i) => addDays(weekStart, i));
+    const last = addDays(weekStart, 6);
+    const m1 = MON[weekStart.getMonth()], m2 = MON[days[5].getMonth()];
+    $("#month").textContent = (m1 === m2 ? m1 : m1 + " / " + m2) + " " + days[5].getFullYear();
+    $("#weekno").textContent = "Week " + isoWeek(weekStart);
+    const jobs = Object.values(feed.jobs || {}).filter((j) => j.hot !== false);
+    const byDay = {};
+    const todo = [], late = [];
+    const thisWeek = iso(mondayOf(t)) === iso(weekStart);
+    for (const j of jobs) {
+      if (!j.due) { todo.push(j); continue; }
+      const d = parse(j.due);
+      if (d >= weekStart && d <= last) {
+        const key = d.getDay() === 0 ? iso(days[5]) : iso(d);
+        (byDay[key] = byDay[key] || []).push(j);
+      } else if (d < weekStart && thisWeek) {
+        const mk = v.jobs[j.job_id];
+        if (!(mk && mk.done)) late.push(j);
       }
-      list.appendChild(g);
     }
-    const f = $("#fresh");
-    if (feed.refreshed_at) { const d = new Date(feed.refreshed_at); const age = (Date.now() - d) / 60000;
-      f.textContent = "Updated " + d.toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" }) + " · hot = due within " + (feed.rules ? feed.rules.window_days : 7) + " days or " + (feed.rules ? feed.rules.big_pieces : 48) + "+ pieces";
-      f.classList.toggle("stale", age > 150); }
+    const manualBy = {};
+    for (const [id, e] of Object.entries(v.manual)) { if (!e || e.deleted) continue; (manualBy[e.day] = manualBy[e.day] || []).push([id, e]); }
+    const sortJobs = (a, b) => (a.order_date || "").localeCompare(b.order_date || "") || a.customer.localeCompare(b.customer);
+    const sortMan = (a, b) => String(a[1].created || a[1].at).localeCompare(String(b[1].created || b[1].at));
+    let html = "";
+    for (const d of days) {
+      const key = iso(d);
+      const list = (byDay[key] || []).sort(sortJobs);
+      const man = (manualBy[key] || []).sort(sortMan);
+      const isToday = key === iso(t);
+      html += '<section class="day' + (isToday ? " is-today" : "") + '" data-day="' + key + '"><div class="dh"><span class="dn">' + DOW[d.getDay()] + '</span><span class="dd">' + d.getDate() + '</span></div><div class="lines">' +
+        list.map((j) => jobEntry(j, v, j.due && parse(j.due).getDay() === 0 ? ' <span class="late">SUN</span>' : "")).join("") +
+        man.map(([id, e]) => manualEntry(id, e)).join("") +
+        addHTML(key) + "</div></section>";
+    }
+    // TO DO page: past due (this week only), big orders with no date yet, and anything written in
+    const lateSorted = late.sort((a, b) => a.due.localeCompare(b.due));
+    const todoSorted = todo.sort((a, b) => (b.pieces || 0) - (a.pieces || 0));
+    const manTodo = (manualBy.todo || []).sort(sortMan);
+    html += '<section class="day todo" data-day="todo"><div class="dh"><span class="dd" style="font-size:18px;font-weight:400;letter-spacing:.08em">TO DO</span></div><div class="lines">' +
+      (lateSorted.length ? '<div class="sub">Past due</div>' + lateSorted.map((j) => { const d = parse(j.due); return jobEntry(j, v, ' <span class="late">' + (d.getMonth() + 1) + "/" + d.getDate() + "</span>"); }).join("") : "") +
+      (todoSorted.length ? '<div class="sub">No date yet</div>' + todoSorted.map((j) => jobEntry(j, v, "")).join("") : "") +
+      (manTodo.length ? '<div class="sub">Written in</div>' + manTodo.map(([id, e]) => manualEntry(id, e)).join("") : "") +
+      addHTML("todo") + "</div></section>";
+    const week = $("#week");
+    const scroll = week.scrollLeft;
+    week.innerHTML = html;
+    week.scrollLeft = scroll;
+    if (addingDay) { const f = week.querySelector('form.w-in[data-day="' + addingDay + '"] input'); if (f && document.activeElement !== f) f.focus(); }
+    if (feed.refreshed_at) $("#fresh").textContent = "List updated " + new Date(feed.refreshed_at).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" });
+  }
+  function addHTML(day) {
+    if (!w) return "";
+    if (addingDay === day) {
+      return '<form class="w-in" data-day="' + day + '"><input name="who" placeholder="Name" maxlength="40" autocomplete="off"><input name="what" placeholder="What (3 shirts, EMB…)" maxlength="60" autocomplete="off"><div class="row"><button type="button" data-cancel>Cancel</button><button type="submit">Write it in</button></div></form>';
+    }
+    return '<button class="add" data-add="' + day + '">+ write one in</button>';
   }
 
-  async function open(code) {
-    const r = await fetch("feed.enc.json?t=" + Date.now(), { cache: "no-store" });
-    if (!r.ok) throw new Error("no feed");
-    const enc = await r.json();
-    const feed = await decrypt(enc, code);
-    try { localStorage.setItem("hotjobs.code", code); } catch (e) {}
-    $("#gate").hidden = true; $("#app").hidden = false;
-    render(feed);
+  // ---------- taps ----------
+  function toggle(kind, id) {
+    if (!w) { showBanner("Check-offs can't be saved yet. Claude is finishing the setup."); return; }
+    const v = view();
+    const part = kind === "job" ? "jobs" : "manual";
+    const cur = v[part][id] || {};
+    const done = !cur.done;
+    const next = Object.assign({}, cur, { done, at: nowIso() });
+    if (done) next.done_at = next.at; else delete next.done_at;
+    pending[part][id] = next;
+    const name = kind === "job" ? ((feed.jobs[id] || {}).customer || "") : (cur.who || "");
+    lastUndo = { part, id, prev: Object.assign({}, cur) };
+    toast((done ? "Struck off " : "Brought back ") + name);
+    render(); flush();
   }
+  function erase(id) {
+    const cur = view().manual[id] || {};
+    pending.manual[id] = Object.assign({}, cur, { deleted: true, at: nowIso() });
+    lastUndo = { part: "manual", id, prev: Object.assign({}, cur) };
+    toast("Erased " + (cur.who || "line"));
+    render(); flush();
+  }
+  function undo() {
+    if (!lastUndo) return;
+    const { part, id, prev } = lastUndo; lastUndo = null;
+    pending[part][id] = Object.assign({}, prev, { at: nowIso() });
+    $("#toast").hidden = true;
+    render(); flush();
+  }
+  function toast(msg) {
+    $("#toastMsg").textContent = msg; $("#toast").hidden = false;
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { $("#toast").hidden = true; }, 5000);
+  }
+  function showBanner(t) { const b = $("#banner"); b.textContent = t; b.hidden = !t; }
 
-  $("#gate").addEventListener("submit", async (e) => {
-    e.preventDefault(); $("#err").textContent = "";
-    try { await open($("#code").value.trim()); }
-    catch (err) { $("#err").textContent = err.message === "no feed" ? "The list isn't published right now." : "That code didn't work."; }
+  $("#week").addEventListener("click", (ev) => {
+    const del = ev.target.closest("[data-del]");
+    if (del) { ev.stopPropagation(); erase(del.dataset.del); return; }
+    const add = ev.target.closest("[data-add]");
+    if (add) { addingDay = add.dataset.add; render(); return; }
+    if (ev.target.closest("[data-cancel]")) { addingDay = null; render(); return; }
+    if (ev.target.closest("form")) return;
+    const e = ev.target.closest(".e");
+    if (e) toggle(e.dataset.kind, e.dataset.id);
   });
+  $("#week").addEventListener("keydown", (ev) => {
+    const e = ev.target.closest(".e");
+    if (e && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); toggle(e.dataset.kind, e.dataset.id); }
+    if (ev.key === "Escape" && addingDay) { addingDay = null; render(); }
+  });
+  $("#week").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const f = ev.target, who = f.who.value.trim(), what = f.what.value.trim();
+    if (!who && !what) { addingDay = null; render(); return; }
+    const id = "m" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const at = nowIso();
+    pending.manual[id] = { day: f.dataset.day, who, what, done: false, deleted: false, at, created: at };
+    addingDay = null; render(); flush();
+  });
+  $("#undo").addEventListener("click", undo);
+  $("#prev").addEventListener("click", () => { weekStart = addDays(weekStart, -7); render(); });
+  $("#next").addEventListener("click", () => { weekStart = addDays(weekStart, 7); render(); });
+  $("#thisweek").addEventListener("click", () => { weekStart = startWeek(); render(); scrollToToday(); });
   $("#lock").addEventListener("click", () => { try { localStorage.removeItem("hotjobs.code"); } catch (e) {} location.reload(); });
 
+  function startWeek() { const t = today(); return t.getDay() === 0 ? addDays(mondayOf(t), 7) : mondayOf(t); }
+  function scrollToToday() {
+    const col = document.querySelector(".day.is-today");
+    const week = $("#week");
+    if (col && week.scrollWidth > week.clientWidth) week.scrollLeft = Math.max(0, col.offsetLeft - 4);
+  }
+
+  // ---------- open ----------
+  async function open(c) {
+    code = c;
+    const r = await fetch("feed.enc.json?t=" + Date.now(), { cache: "no-store" });
+    if (!r.ok) throw new Error("nofeed");
+    feed = await decrypt(await r.json());
+    w = feed.w || null;
+    delete feed.w;
+    try { localStorage.setItem("hotjobs.code", c); } catch (e) {}
+    $("#gate").hidden = true; $("#book").hidden = false;
+    weekStart = weekStart || startWeek();
+    if (!w) showBanner("Read only for now: check-offs can't be saved until Claude finishes the setup.");
+    render(); scrollToToday();
+    if (w) {
+      try { const cur = await fetchBoard(); remote = cur.board; remoteSha = cur.sha; remoteSalt = cur.salt; setSync("Up to date"); render(); }
+      catch (e) { setSync("Offline", true); }
+    }
+  }
+  async function reloadFeed() {
+    try {
+      const r = await fetch("feed.enc.json?t=" + Date.now(), { cache: "no-store" });
+      if (!r.ok) return;
+      const f = await decrypt(await r.json());
+      w = f.w || w; delete f.w; feed = f; render();
+    } catch (e) {}
+  }
+  $("#gate").addEventListener("submit", async (ev) => {
+    ev.preventDefault(); $("#err").textContent = "";
+    try { await open($("#code").value.trim()); }
+    catch (e) { code = ""; keys.clear(); $("#err").textContent = e.message === "nofeed" ? "The book isn't published right now." : "That code didn't work."; }
+  });
   let saved = null; try { saved = localStorage.getItem("hotjobs.code"); } catch (e) {}
-  if (saved) open(saved).catch(() => { try { localStorage.removeItem("hotjobs.code"); } catch (e) {} });
-  document.addEventListener("visibilitychange", () => { if (!document.hidden && !$("#app").hidden && saved) open(saved).catch(() => {}); });
+  if (saved) open(saved).catch(() => { code = ""; keys.clear(); try { localStorage.removeItem("hotjobs.code"); } catch (e) {} });
+  setInterval(poll, 20000);
+  setInterval(reloadFeed, 5 * 60000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && feed) { poll(); reloadFeed(); } });
+  window.addEventListener("online", () => { flush(); poll(); });
 })();
 </script>
 </body>
