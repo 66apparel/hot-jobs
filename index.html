@@ -73,12 +73,15 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .e .p { display: flex; gap: 5px; height: var(--row); align-items: center; overflow: hidden; }
 .e .c { font-size: 11.5px; font-weight: 500; line-height: 1; padding: 4px 8px; border-radius: 999px; background: var(--chip); color: var(--chip-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .e .c.big { background: var(--big); color: var(--big-ink); font-weight: 600; }
+.e .c.rdy { background: var(--dot-ok); color: #fff; font-weight: 600; }
+.e .c.tx { background: transparent; border: 1px solid var(--frame); color: var(--muted); }
+.e.done .p .c.tx { opacity: 1; }
 .e .dot { position: absolute; left: 2px; top: 10px; width: 7px; height: 7px; border-radius: 50%; background: var(--dot-shell); }
 .e .dot.proof { background: var(--dot-proof); }
 .e .dot.approved, .e .dot.production { background: var(--dot-ok); }
 .e .late { color: var(--red); font-family: var(--print); font-size: 11px; font-weight: 600; letter-spacing: .04em; }
 .e.done .n, .e.done .w { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 2px; text-decoration-color: var(--ink); }
-.e.done .p { opacity: .4; }
+.e.done .p .c:not(.tx) { opacity: .4; }
 .e.done .dot { background: transparent; border: 1px solid var(--muted); }
 .e .x { position: absolute; right: 0; top: 2px; width: 22px; height: 24px; border: 0; background: none; color: var(--muted); font-size: 18px; line-height: 1; padding: 0; }
 .e:hover .n { text-decoration-color: var(--ink); }
@@ -285,6 +288,9 @@ form.w-in .row button { font-size: 12px; border: 1px solid var(--frame); backgro
     if (j.pieces) pills.push('<span class="c' + (j.urgent && (j.reasons || []).some((r) => /pieces/.test(r)) || j.pieces >= 48 ? " big" : "") + '">' + j.pieces + " " + esc(j.unit || (j.pieces === 1 ? "pc" : "pcs")) + "</span>");
     const dept = j.dept || method(j.decoration, j.job);
     if (dept) pills.push('<span class="c">' + esc(dept) + "</span>");
+    const isDone = !!(m && m.done);
+    if (isDone && m.by && /ready text/.test(m.by)) pills.push('<span class="c tx">' + esc(m.by.replace("ready text", "texted")) + "</span>");
+    else if (!isDone && j.ready_text) pills.push('<span class="c rdy">Ready text ' + esc(j.ready_text) + "</span>");
     return entryHTML("job", j.job_id, j.customer, titleCase(j.job), pills, !!(m && m.done), st, extraTag);
   }
   function manualEntry(id, e) { return entryHTML("manual", id, e.who || "", e.what || "", [], !!e.done, "", ""); }
